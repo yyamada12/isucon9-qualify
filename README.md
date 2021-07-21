@@ -1,5 +1,35 @@
 # isucon9-qualify
 
+## vagrant 構築方法
+
+```
+# 初期データ作成
+$ cd initial-data
+$ make
+
+# 初期画像データダウンロード
+$ cd webapp/public
+# GitHub releases から initial.zip をダウンロード
+$ wget https://github.com/isucon/isucon9-qualify/releases/download/v2/initial.zip
+$ unzip initial.zip
+$ rm -rf upload
+$ mv v3_initial_data upload
+
+# ベンチマーク用画像データダウンロード
+$ cd initial-data
+# GitHub releases から bench1.zip をダウンロード
+$ wget https://github.com/isucon/isucon9-qualify/releases/download/v2/bench1.zip
+$ unzip bench1.zip
+$ rm -rf images
+$ mv v3_bench1 images
+
+# vagrant up 
+# ３(web)+1(bench)台構成 サーバ1台あたり CPU2コア, メモリ4GB, ストレージ約10GB のリソースが必要
+cd provisioning
+vagrant up
+
+```
+
 ## ディレクトリ構成
 
 ```
@@ -28,6 +58,7 @@ $ make
 
 $ cd webapp/public
 # GitHub releases から initial.zip をダウンロード
+$ wget https://github.com/isucon/isucon9-qualify/releases/download/v2/initial.zip
 $ unzip initial.zip
 $ rm -rf upload
 $ mv v3_initial_data upload
@@ -36,6 +67,7 @@ $ mv v3_initial_data upload
 
 $ cd initial-data
 # GitHub releases から bench1.zip をダウンロード
+$ wget https://github.com/isucon/isucon9-qualify/releases/download/v2/bench1.zip
 $ unzip bench1.zip
 $ rm -rf images
 $ mv v3_bench1 images
