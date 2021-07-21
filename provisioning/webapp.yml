@@ -1,28 +1,28 @@
-- hosts: webapp
+- hosts: localhost
   user: root
   gather_facts: yes
 
   roles:
     - user.isucon
     - bootstrap
-    - aliyun
+    # - aliyun
     - webapp.deploy
 
     - nginx
     - mysql
     - golang
-    - perl
-    - php
-    - ruby
-    - python
-    - nodejs
+    # - perl
+    # - php
+    # - ruby
+    # - python
+    # - nodejs
     - webapp.mysql
     - webapp.golang
-    - webapp.perl
-    - webapp.php
-    - webapp.ruby
-    - webapp.python
-    - webapp.nodejs
+    # - webapp.perl
+    # - webapp.php
+    # - webapp.ruby
+    # - webapp.python
+    # - webapp.nodejs
     - webapp.nginx
 
   tasks:

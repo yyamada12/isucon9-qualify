@@ -16,17 +16,47 @@ apt -y install python-pip
 pip install ansible==2.8.3
 SCRIPT
 
+$ansible_provision_web =<<-SCRIPT
+set -e
+cd /tmp/isucon9-qualify/provisioning
+PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ansible-playbook -vvv webapp.yml
+SCRIPT
+
+$ansible_provision_bench =<<-SCRIPT
+set -e
+cd /tmp/isucon9-qualify/provisioning
+PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ansible-playbook -vvv bench.yml
+SCRIPT
+
 
 Vagrant.configure(2) do |config|
   config.vm.box = "bento/ubuntu-18.04"
-  config.vm.provider "virtualbox" do |vm|
-    vm.name   = "isucon9-quarifier"
-    vm.cpus   = 4
-    vm.memory = 2048
+  3.times do |num|
+    config.vm.define "image-#{num}" do |web|
+      web.vm.network "private_network", ip: "192.168.33.#{10+num}"
+      web.vm.provider "virtualbox" do |vb|
+        vb.cpus = 2
+        vb.memory = 4096
+      end
+      web.vm.provision :shell, inline: $disable_unattended_upgrades
+      web.vm.provision :shell, inline: $setup_quarifier_environment
+      web.vm.provision "file", source: "..", destination: "/tmp/isucon9-qualify"
+      web.vm.provision :shell, inline: $ansible_provision_web
+      web.vm.provision :shell, inline: "rm -rf /tmp/isucon9-qualify"
+    end
   end
-  config.vm.hostname = "isucon9-quarifier"
 
-  config.vm.provision :shell, inline: $disable_unattended_upgrades
-  config.vm.provision :shell, inline: $setup_quarifier_environment
-  config.vm.synced_folder "../", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+  config.vm.define "bench" do |bench|
+    bench.vm.network "private_network", ip:"192.168.33.9"
+
+    bench.vm.provider "virtualbox" do |vb|
+      vb.cpus = 2
+      vb.memory = 4096
+    end
+    bench.vm.provision :shell, inline: $disable_unattended_upgrades
+    bench.vm.provision :shell, inline: $setup_quarifier_environment
+    bench.vm.provision "file", source: "..", destination: "/tmp/isucon9-qualify"
+    bench.vm.provision :shell, inline: $ansible_provision_bench
+    bench.vm.provision :shell, inline: "rm -rf /tmp/isucon9-qualify"
+  end
 end

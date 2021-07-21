@@ -12,6 +12,13 @@
     dest: /home/isucon/isucari/webapp
     delete: yes
     recursive: yes
+    rsync_opts:
+      - "--exclude=webapp/nodejs"
+      - "--exclude=webapp/perl"
+      - "--exclude=webapp/php"
+      - "--exclude=webapp/python"
+      - "--exclude=webapp/ruby"
+
 
 - name: Chown isucon
   become: yes
