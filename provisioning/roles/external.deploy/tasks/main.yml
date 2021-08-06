@@ -17,6 +17,11 @@
       - "--exclude=.gitignore"
       - "--exclude=provisioning"
       - "--exclude=webapp/public/upload"
+      - "--exclude=webapp/nodejs"
+      - "--exclude=webapp/perl"
+      - "--exclude=webapp/php"
+      - "--exclude=webapp/python"
+      - "--exclude=webapp/ruby"
 
 - name: Chown isucon
   become: yes
